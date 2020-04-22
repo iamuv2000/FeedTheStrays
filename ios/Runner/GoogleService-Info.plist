@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>953294602206-jeso7dk2b5a96stsnplu38i6tdfntapf.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.953294602206-jeso7dk2b5a96stsnplu38i6tdfntapf</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCBFb3Kqu7EQBmqILgboUWiy04d6N73NlQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>953294602206</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>iamuv2000.com.feedthestrays</string>
+	<key>PROJECT_ID</key>
+	<string>feedthestrays</string>
+	<key>STORAGE_BUCKET</key>
+	<string>feedthestrays.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:953294602206:ios:3423cb4ec6b9b14ccee74f</string>
+	<key>DATABASE_URL</key>
+	<string>https://feedthestrays.firebaseio.com</string>
+</dict>
+</plist>
