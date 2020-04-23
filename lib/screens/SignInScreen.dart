@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import './AuthTest.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../Utils/create_user.dart';
+import './MapScreen.dart';
 
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -47,45 +47,60 @@ class _SignInScreenState extends State<SignInScreen> {
 }
 
 Widget _signInButton(BuildContext context){
-  return FlatButton(
-    color: Colors.deepOrange,
-    splashColor: Colors.orange,
-    onPressed: () async {
-      final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
-      final GoogleSignInAuthentication googleSignInAuthentication =
-          await googleSignInAccount.authentication;
+  return Container(
+    decoration: BoxDecoration(
+      boxShadow: [
+      BoxShadow(
+          color: Colors.black12,
+          blurRadius: 10.0, // has the effect of softening the shadow
+          spreadRadius: 1.0, // has the effect of extending the shadow
+          offset: Offset(
+          0, // horizontal, move right 10
+          5.0, // vertical, move down 10
+      ),
+      ),
+      ],
+    ),
+    child: FlatButton(
+        color: Colors.deepOrange,
+      splashColor: Colors.orange,
+      onPressed: () async {
+        final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+        final GoogleSignInAuthentication googleSignInAuthentication =
+            await googleSignInAccount.authentication;
 
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
-        accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken,
-      );
+        final AuthCredential credential = GoogleAuthProvider.getCredential(
+          accessToken: googleSignInAuthentication.accessToken,
+          idToken: googleSignInAuthentication.idToken,
+        );
 
-      final AuthResult authResult = await _auth.signInWithCredential(credential);
-      final FirebaseUser user = authResult.user;
-      createUser(user);
-      Navigator.push(context, MaterialPageRoute(builder: (context){
-        return FirsScreen(firebase_user: user);
-      }));
-      },
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-    child: Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(10.0),
+        final AuthResult authResult = await _auth.signInWithCredential(credential);
+        final FirebaseUser user = authResult.user;
+        createUser(user);
+        Navigator.push(context, MaterialPageRoute(builder: (context){
+          return GoogleMapScreen(firebase_user: user);
+        }));
+        },
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(10.0),
 
-            child: Text(
-              'Sign in with Google',
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.white,
+              child: Text(
+                'Sign in with Google',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     ),
   );

@@ -21,7 +21,7 @@ void createUser(FirebaseUser user) async{
       'name': user.displayName,
       'createdDate' : new DateTime.now()
     });
-    print("user created!");
+    print("User created!");
 
   }
   else{

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import './screens/MapScreen.dart';
 import './screens/SignInScreen.dart';
 
 void main() {
@@ -16,12 +15,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.orange,
       ),
-      home: Scaffold(
-        backgroundColor: Colors.orangeAccent,
-        body: SafeArea(
-          child: Padding(
-              padding: const EdgeInsets.only(bottom: 5.0),
-              child:  SignInScreen()
+      home: WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          backgroundColor: Colors.orange,
+          body: SafeArea(
+            child: Padding(
+                padding: const EdgeInsets.only(bottom: 5.0),
+                child:  SignInScreen()
+            ),
           ),
         ),
       ),
