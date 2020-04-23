@@ -14,12 +14,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'FeedTheStrays',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.orange,
       ),
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('FeedTheStrays'),
-        ),
+        backgroundColor: Colors.orangeAccent,
         body: SafeArea(
           child: Padding(
               padding: const EdgeInsets.only(bottom: 5.0),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../Utils/sign_in.dart';
 import './AuthTest.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../Utils/create_user.dart';
 
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -18,13 +18,26 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-          color: Colors.white,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Colors.orangeAccent[400] ,Colors.orangeAccent[200]],
+            )
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              FlutterLogo(size: 150),
-              SizedBox(height: 50),
+          Padding(
+            padding: const EdgeInsets.only(right : 30.0),
+            child: Image.asset(
+                "assets/feed_the_stray_logo.png",
+              scale: 1
+            ),
+          ),
+              SizedBox(height: 100),
               _signInButton(context),
             ],
         ),
@@ -34,8 +47,9 @@ class _SignInScreenState extends State<SignInScreen> {
 }
 
 Widget _signInButton(BuildContext context){
-  return OutlineButton(
-    splashColor: Colors.grey,
+  return FlatButton(
+    color: Colors.deepOrange,
+    splashColor: Colors.orange,
     onPressed: () async {
       final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
       final GoogleSignInAuthentication googleSignInAuthentication =
@@ -48,27 +62,26 @@ Widget _signInButton(BuildContext context){
 
       final AuthResult authResult = await _auth.signInWithCredential(credential);
       final FirebaseUser user = authResult.user;
+      createUser(user);
       Navigator.push(context, MaterialPageRoute(builder: (context){
         return FirsScreen(firebase_user: user);
       }));
       },
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-    highlightElevation: 0,
-    borderSide: BorderSide(color: Colors.grey),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     child: Padding(
-      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+      padding: const EdgeInsets.all(10.0),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Image(image: AssetImage("assets/google_logo.png"), height: 35.0),
           Padding(
-            padding: const EdgeInsets.only(left: 10),
+            padding: const EdgeInsets.all(10.0),
+
             child: Text(
               'Sign in with Google',
               style: TextStyle(
                 fontSize: 20,
-                color: Colors.grey,
+                color: Colors.white,
               ),
             ),
           )
