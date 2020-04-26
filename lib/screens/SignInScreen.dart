@@ -78,7 +78,7 @@ Widget _signInButton(BuildContext context){
         final FirebaseUser user = authResult.user;
         createUser(user);
         Navigator.push(context, MaterialPageRoute(builder: (context){
-          return GoogleMapScreen(firebase_user: user);
+          return GoogleMapScreen(firebaseUser: user);
         }));
         },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),

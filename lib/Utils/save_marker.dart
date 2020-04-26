@@ -18,8 +18,10 @@ void saveMarker(LatLng location, FirebaseUser user) async{
     "title": "Amanora",
     "snippet" : "Pune",
     "createdDate" : new DateTime.now(),
+    "FedAt" :   DateTime.now().subtract(new Duration(days: 1)),
     "createdBy" : user.uid,
-    "isFed" : false
+    "isFedEver" : false,
+    "createdByName" : user.displayName
   });
 
 }

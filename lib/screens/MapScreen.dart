@@ -6,11 +6,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Utils/save_marker.dart';
+
+import './MarkerInfoScreen.dart';
+import 'package:location/location.dart';
+
+
 final _fireStore = Firestore.instance;
 
 class GoogleMapScreen extends StatefulWidget {
-  GoogleMapScreen({this.firebase_user});
-  FirebaseUser firebase_user;
+  GoogleMapScreen({this.firebaseUser});
+  FirebaseUser firebaseUser;
+  Location location = new Location();
   @override
   _GoogleMapScreenState createState() => _GoogleMapScreenState();
 }
@@ -18,38 +24,106 @@ class GoogleMapScreen extends StatefulWidget {
 class _GoogleMapScreenState extends State<GoogleMapScreen> {
   void initState() {
     super.initState();
-    getAllMarkers();
+    _getLocation();
   }
   Completer<GoogleMapController> _controller = Completer();
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(18.5204, 73.8567),
-    zoom: 13,
-  );
+  static double latitude;
+  static double longitude;
+
+  CameraPosition _kGooglePlex ;
 
   List<Marker> markers = <Marker>[
 
   ];
 
-  void getAllMarkers () {
+  List<Circle> circles = <Circle>[
+
+  ];
+
+
+  void _getLocation() async {
+    LocationData loc = await widget.location.getLocation();
+    getAllMarkers();
+    print(loc);
+    latitude = loc.latitude;
+    longitude = loc.longitude;
+    setState(() {
+      _kGooglePlex = CameraPosition(
+        target: LatLng(latitude, longitude),
+        zoom: 13,
+      );
+      final circle = Circle(
+        circleId: CircleId("curr_loc"),
+        center: LatLng(loc.latitude, loc.longitude),
+        fillColor: Colors.blueAccent,
+          strokeColor: Colors.blueAccent,
+        radius: 5,
+        zIndex: 100,
+
+      );
+      final circleBackground = Circle(
+        circleId: CircleId("curr_loc_bg"),
+        center: LatLng(loc.latitude, loc.longitude),
+        strokeColor: Color.fromRGBO(230, 230, 230, 1),
+        radius: 18,
+        zIndex: 10,
+
+      );
+      circles.add(circle);
+      circles.add(circleBackground);
+    });
+    GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(loc.latitude, loc.longitude),
+        zoom: 17.0,
+      ),
+    ));
+  }
+
+  Future <void> getAllMarkers () {
+    markers = [];
     print("Getting marker data");
     _fireStore.collection('markers').getDocuments()
         .then((QuerySnapshot snapshot) => {
     snapshot.documents.forEach((markerData) => {
       setState((){
+        var maxFoodDelay = new DateTime.now().subtract(new Duration(days: 1));
+        var lastFed = DateTime.fromMillisecondsSinceEpoch(markerData.data["FedAt"].seconds *1000);
         markers.add(Marker(
           markerId: MarkerId(markerData.data["markerId"]),
           position: LatLng(markerData.data["latitude"],markerData.data["longitude"]),
           infoWindow: InfoWindow(
               title: 'Amanora', snippet: 'Pune'),
-          onTap: () {},
-          icon: BitmapDescriptor.defaultMarkerWithHue(markerData.data["isFed"] ? 120.0 : 0 )
+          onTap: () {
+            showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (context) => SingleChildScrollView(
+                    child:Container(
+                        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                        child: MarkerInfoScreen(lastFed: lastFed ,isFedEver:  markerData.data["isFedEver"], markerId: markerData.data["markerId"], firebaseUser: widget.firebaseUser, updateMarkerView : getAllMarkers())
+                    )
+                )
+            );
+          },
+            flat: true,
+            draggable: true,
+          icon: BitmapDescriptor.defaultMarkerWithHue
+            (
+              lastFed.isBefore(maxFoodDelay)
+                  ?
+                  0
+                  :
+              120.0
+          )
         ),
         );
       })
 
     }),
-      print(markers)
     });
   }
 
@@ -78,7 +152,9 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
             },
+            circles: Set<Circle>.of(circles),
             markers: Set<Marker>.of(markers),
+            myLocationButtonEnabled: false,
             onTap: (LatLng location) {
               showDialog(
                   context: context,
@@ -105,16 +181,25 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                             ),
                           ),
                           onPressed: () {
-                            saveMarker(location , widget.firebase_user);
+                            saveMarker(location , widget.firebaseUser);
                             getAllMarkers();
                             Navigator.of(context).pop();
+                            getAllMarkers();
                           },
                         ),
                       ],
                     );
                   });
             }),
-
+        floatingActionButton: FloatingActionButton(
+          onPressed: _getLocation,
+          backgroundColor: Color.fromRGBO(250, 250, 250, 1),
+          tooltip: 'Get Location',
+          child: Icon(
+              Icons.gps_fixed,
+            color: Colors.blueGrey
+          ),
+        ),
       ),
     );
   }
