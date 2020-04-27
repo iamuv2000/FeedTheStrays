@@ -3,11 +3,12 @@ import 'dart:async';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../Utils/save_marker.dart';
 
 import './MarkerInfoScreen.dart';
+import './MyMarkerScreen.dart';
 import 'package:location/location.dart';
 
 
@@ -132,13 +133,50 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        appBar: AppBar(
-            leading:  IconButton(
-              icon: Icon(
-                  Icons.ac_unit,
-                color: Colors.orange,
+
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              UserAccountsDrawerHeader(
+                accountName: Text("${widget.firebaseUser.displayName}"),
+                accountEmail: Text("${widget.firebaseUser.email}"),
+                currentAccountPicture: CircleAvatar(
+                  backgroundColor:
+                  Theme.of(context).platform == TargetPlatform.iOS
+                      ? Colors.blue
+                      : Colors.white,
+                  backgroundImage: NetworkImage(
+                    widget.firebaseUser.photoUrl,
+                  ),
+                  radius: 60,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.orangeAccent,
+                ),
               ),
-            ),
+              ListTile(
+                title: Text('Map'),
+                leading: Icon(Icons.gps_fixed),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.location_on),
+                title: Text('My markers'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context){
+                    return MyMarkerScreen(firebaseUser: widget.firebaseUser);
+                  }));
+                },
+              ),
+            ],
+          ),
+        ),
+        appBar: AppBar(
+
             title : Text(
                 'Feed The Strays',
               style: TextStyle(
