@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "953294602206",
+    "firebase_url": "https://feedthestrays.firebaseio.com",
+    "project_id": "feedthestrays",
+    "storage_bucket": "feedthestrays.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:953294602206:android:6b1d3c68d386664ecee74f",
+        "android_client_info": {
+          "package_name": "iamuv2000.com.feedthestrays"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "953294602206-eu6okdphi9mnnt0mqvnutsun31eldloe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "iamuv2000.com.feedthestrays",
+            "certificate_hash": "6184545346d43058681ad11054cb08a30d230cd4"
+          }
+        },
+        {
+          "client_id": "953294602206-cbraq56pri6q30jd0929nuvq7kqeu0uv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuAeRHabINV88n4SoqODJbq0QZhCOl5dE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "953294602206-cbraq56pri6q30jd0929nuvq7kqeu0uv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "953294602206-jeso7dk2b5a96stsnplu38i6tdfntapf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "iamuv2000.com.feedthestrays"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
