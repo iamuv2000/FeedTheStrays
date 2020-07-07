@@ -10,6 +10,9 @@ import '../Utils/save_marker.dart';
 import './MarkerInfoScreen.dart';
 import './MyMarkerScreen.dart';
 import 'package:location/location.dart';
+import 'dart:math' show cos, sqrt, asin;
+
+
 
 
 final _fireStore = Firestore.instance;
@@ -42,6 +45,15 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
   ];
 
+  double calculateDistance(lat1, lon1, lat2, lon2){
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 - c((lat2 - lat1) * p)/2 +
+        c(lat1 * p) * c(lat2 * p) *
+            (1 - c((lon2 - lon1) * p))/2;
+    return 12742 * asin(sqrt(a));
+  }
+
 
   void _getLocation() async {
     LocationData loc = await widget.location.getLocation();
@@ -49,6 +61,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
     print(loc);
     latitude = loc.latitude;
     longitude = loc.longitude;
+
     setState(() {
       _kGooglePlex = CameraPosition(
         target: LatLng(latitude, longitude),
@@ -193,40 +206,58 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
             circles: Set<Circle>.of(circles),
             markers: Set<Marker>.of(markers),
             myLocationButtonEnabled: false,
-            onTap: (LatLng location) {
+            onTap: (LatLng location)  async{
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("Map tapped!"),
-                      content: Text("You tapped in " +
-                          location.latitude.toString() +
-                          ", " +
-                          location.longitude.toString()),
-                      actions: <Widget>[
+
+                   double totalDistance = calculateDistance(location.latitude, location.longitude,latitude, longitude);
+                   print(totalDistance);
+
+                   if(totalDistance > 0.5){
+                     return AlertDialog(
+                       title: Text("Location too far"),
+                       content: Text("Sorry, the tapped location must be under 500m to mark location"),
+                       actions: <Widget>[
 // usually buttons at the bottom of the dialog
-                        FlatButton(
-                          child: Text("Cancel"),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        FlatButton(
-                          child: Text(
-                              "Add",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700
-                            ),
-                          ),
-                          onPressed: () {
-                            saveMarker(location , widget.firebaseUser);
-                            getAllMarkers();
-                            Navigator.of(context).pop();
-                            getAllMarkers();
-                          },
-                        ),
-                      ],
-                    );
+                         FlatButton(
+                           child: Text("Cancel"),
+                           onPressed: () {
+                             Navigator.of(context).pop();
+                           },
+                         ),
+                       ],
+                     );
+                   }
+                   else{
+                     return AlertDialog(
+                       title: Text("Add location?"),
+                       content: Text("Are you sure you want to add the tapped location (" + location.latitude.toString()+ " , " + location.longitude.toString()+ ")  to indicate the location of a stray dog"),
+                       actions: <Widget>[
+// usually buttons at the bottom of the dialog
+                         FlatButton(
+                           child: Text("Cancel"),
+                           onPressed: () {
+                             Navigator.of(context).pop();
+                           },
+                         ),
+                         FlatButton(
+                           child: Text(
+                             "Add",
+                             style: TextStyle(
+                                 fontWeight: FontWeight.w700
+                             ),
+                           ),
+                           onPressed: () {
+                             saveMarker(location , widget.firebaseUser);
+                             getAllMarkers();
+                             Navigator.of(context).pop();
+                             getAllMarkers();
+                           },
+                         ),
+                       ],
+                     );
+                   }
                   });
             }),
         floatingActionButton: FloatingActionButton(
