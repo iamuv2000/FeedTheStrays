@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import './MapScreen.dart';
-
+import '../Utils/deleteMarker.dart';
 final _fireStore = Firestore.instance;
 
 class MyMarkerScreen extends StatefulWidget {
@@ -75,9 +75,18 @@ class _MyMarkerScreenState extends State<MyMarkerScreen> {
                 children: snapshot.data.documents.map((document) {
                   if (!snapshot.hasData) return new Text('Loading...');
                   return ListTile(
-                    title: Text(document['snippet']),
+                    title: Text(document['address']),
                     subtitle: Text(document['title']),
-                    trailing: Icon(Icons.delete),
+                    trailing: FloatingActionButton(
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                      backgroundColor: Colors.deepOrangeAccent,
+                      onPressed: (){
+                        deleteMarker(widget.firebaseUser, document['markerId']);
+                      },
+                    ),
                   );
                 }).toList(),
               );

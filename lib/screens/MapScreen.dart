@@ -12,6 +12,8 @@ import './MyMarkerScreen.dart';
 import 'package:location/location.dart';
 import 'dart:math' show cos, sqrt, asin;
 
+import 'package:geocoder/geocoder.dart';
+
 
 
 
@@ -61,6 +63,12 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
     print(loc);
     latitude = loc.latitude;
     longitude = loc.longitude;
+//    final coordinates=new Coordinates(latitude, longitude);
+//    var address=await Geocoder.local.findAddressesFromCoordinates(coordinates);
+//    var first=address.first;
+//    //print('${first.locality}, ${first.adminArea}, ${first.subLocality}, ${first.addressLine},  ' );
+//    print('${first.addressLine}');
+//isko remove karna hai
 
     setState(() {
       _kGooglePlex = CameraPosition(
@@ -110,7 +118,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
           markerId: MarkerId(markerData.data["markerId"]),
           position: LatLng(markerData.data["latitude"],markerData.data["longitude"]),
           infoWindow: InfoWindow(
-              title: 'Amanora', snippet: 'Pune'),
+              title: markerData.data["title"], snippet: markerData.data["address"]),
           onTap: () {
             showModalBottomSheet(
                 context: context,
@@ -232,7 +240,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                    else{
                      return AlertDialog(
                        title: Text("Add location?"),
-                       content: Text("Are you sure you want to add the tapped location (" + location.latitude.toString()+ " , " + location.longitude.toString()+ ")  to indicate the location of a stray dog"),
+                       content:Text("Are you sure you want to add the tapped location (" + location.latitude.toString()+ " , " + location.longitude.toString()+ ")  to indicate the location of a stray dog"),
                        actions: <Widget>[
 // usually buttons at the bottom of the dialog
                          FlatButton(

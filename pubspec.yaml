@@ -30,6 +30,8 @@ dependencies:
   cloud_firestore: ^0.13.5
   uuid: 2.0.4
   location: ^3.0.0
+  geocoder: ^0.2.1
+  dropdown_menu: ^1.1.0
 
 
 dev_dependencies:

@@ -1,10 +1,17 @@
+import 'package:feedthestrays/Utils/save_marker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Utils/updateFeedStatus.dart';
-
+import '../Utils/deleteMarker.dart';
+import 'package:dropdown_menu/dropdown_menu.dart';
 
 class MarkerInfoScreen extends StatefulWidget {
-  MarkerInfoScreen({this.lastFed, this.isFedEver , this.markerId, this.firebaseUser, this.updateMarkerView});
+  MarkerInfoScreen(
+      {this.lastFed,
+      this.isFedEver,
+      this.markerId,
+      this.firebaseUser,
+      this.updateMarkerView});
   DateTime lastFed; //To see if dog has been fed recently
   bool isFedEver;
   String markerId;
@@ -17,7 +24,6 @@ class MarkerInfoScreen extends StatefulWidget {
 }
 
 class _MarkerInfoScreenState extends State<MarkerInfoScreen> {
-
   void initState() {
     super.initState();
     setContext();
@@ -26,21 +32,23 @@ class _MarkerInfoScreenState extends State<MarkerInfoScreen> {
   var status;
   var unit = '';
 
-  void setContext () {
+  var _tag = ['Beware', 'Friendly', 'Not Selected'];
+  var _currentTag = ['Not Selected'];
+
+  void setContext() {
     setState(() {
-      if(widget.isFedEver){
+      if (widget.isFedEver) {
         status = DateTime.now().difference(widget.lastFed).inMinutes;
         unit = 'minutes ago';
-        if(status > 60 && DateTime.now().difference(widget.lastFed).inDays==0) {
+        if (status > 60 &&
+            DateTime.now().difference(widget.lastFed).inDays == 0) {
           status = DateTime.now().difference(widget.lastFed).inHours;
           unit = 'hours ago';
-        }
-        else if(status > 24){
+        } else if (status > 24) {
           status = DateTime.now().difference(widget.lastFed).inDays.toString();
           unit = 'day(s) ago';
         }
-      }
-      else {
+      } else {
         status = 'NEVER';
       }
     });
@@ -61,7 +69,6 @@ class _MarkerInfoScreenState extends State<MarkerInfoScreen> {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-
           children: <Widget>[
             Text(
               'Feed Status',
@@ -71,6 +78,8 @@ class _MarkerInfoScreenState extends State<MarkerInfoScreen> {
                 fontSize: 30.0,
               ),
             ),
+            SizedBox(width: 100),
+
             SizedBox(height: 20),
             Row(
               children: <Widget>[
@@ -83,9 +92,9 @@ class _MarkerInfoScreenState extends State<MarkerInfoScreen> {
                 Text(
                   '$status $unit',
                   style: TextStyle(
-                  color: widget.isFedEver ? Colors.green: Colors.redAccent ,
-                  fontSize: 18.0,
-                ),
+                    color: widget.isFedEver ? Colors.green : Colors.redAccent,
+                    fontSize: 18.0,
+                  ),
                 )
               ],
             ),
@@ -104,7 +113,6 @@ class _MarkerInfoScreenState extends State<MarkerInfoScreen> {
                 Navigator.pop(context);
               },
             ),
-
           ],
         ),
       ),
