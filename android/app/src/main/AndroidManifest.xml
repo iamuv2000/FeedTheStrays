@@ -10,7 +10,7 @@
         android:label="feedthestrays"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAuAeRHabINV88n4SoqODJbq0QZhCOl5dE"/>
+            android:value="AIzaSyD6lZ6iqdHv3GUeFJnj2PwLfUt-kJAmnos"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
